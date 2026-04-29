@@ -1,0 +1,181 @@
+1. Définir la structure Point
+typedef struct {
+    int x;
+    int y;
+} Point;
+Explication
+La structure Point permet de stocker deux entiers dans une seule variable.
+Par exemple, un point p aura deux champs :
+p.x
+p.y
+2. Fonction de saisie d’un point
+Point SaisirPoint() {
+    Point p;
+
+    printf("Donner les coordonnées du point x et y : ");
+    scanf("%d %d", &p.x, &p.y);
+
+    return p;
+}
+Point SaisirPoint() {
+    Point p;
+
+    printf("Donner les coordonnées du point x et y : ");
+    scanf("%d %d", &p.x, &p.y);
+
+    return p;
+}
+3. Fonction d’affichage d’un point
+void AfficherPoint(Point p) {
+    printf("(%d,%d)\n", p.x, p.y);
+}
+void AfficherPoint(Point p) {
+    printf("(%d,%d)\n", p.x, p.y);
+}
+(x,y)
+Par exemple, si x = 3 et y = 5, l’affichage sera :
+(3,5)
+4. Tableau de points
+#define TMAX 100
+
+Point T[TMAX];
+Explication
+
+Dans la version statique, la taille maximale du tableau est fixée à l’avance.
+Ici, le tableau peut contenir au maximum 100 points.
+Point *T;
+int n;
+
+printf("Donner le nombre de points : ");
+scanf("%d", &n);
+
+T = malloc(n * sizeof(Point));
+
+if (T == NULL) {
+    printf("Erreur d'allocation mémoire\n");
+    exit(1);
+}
+Explication
+
+Dans la version dynamique, la taille du tableau est choisie pendant l’exécution du programme.
+La fonction malloc réserve l’espace mémoire nécessaire.
+Explication
+
+5. Distance d’un point par rapport à l’origine
+La distance entre un point P(x,y) et l’origine O(0,0) est donnée par :
+d = √(x² + y²)
+a. Passage par valeur
+float DistanceVal(Point p) {
+    return sqrt(p.x * p.x + p.y * p.y);
+}
+Explication
+Ici, la structure Point est transmise par valeur.
+Cela signifie qu’une copie du point est envoyée à la fonction.
+
+b. Passage par adresse
+float DistanceAdr(Point *p) {
+    return sqrt(p->x * p->x + p->y * p->y);
+}
+Explication
+Ici, on transmet l’adresse du point.
+On utilise donc l’opérateur -> pour accéder aux champs de la structure.
+Le passage par adresse est plus efficace lorsque la structure est grande, car il évite la copie.
+
+6. Trier un tableau de points selon la distance à l’origine
+void TrierPoints(Point T[], int n) {
+    int i, j;
+    Point temp;
+
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (DistanceVal(T[i]) > DistanceVal(T[j])) {
+                temp = T[i];
+                T[i] = T[j];
+                T[j] = temp;
+            }
+        }
+    }
+}
+Explication
+On compare chaque point avec les autres.
+Si un point est plus éloigné que le suivant, on échange leurs positions.
+À la fin, les points sont classés par distance croissante par rapport à l’origine.
+
+Complexité
+Il y a deux boucles imbriquées :
+O(n²)
+7. Programme d’essai
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+Point SaisirPoint() {
+    Point p;
+    printf("Donner x et y : ");
+    scanf("%d %d", &p.x, &p.y);
+    return p;
+}
+
+void AfficherPoint(Point p) {
+    printf("(%d,%d)\n", p.x, p.y);
+}
+
+float DistanceVal(Point p) {
+    return sqrt(p.x * p.x + p.y * p.y);
+}
+
+void TrierPoints(Point T[], int n) {
+    int i, j;
+    Point temp;
+
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (DistanceVal(T[i]) > DistanceVal(T[j])) {
+                temp = T[i];
+                T[i] = T[j];
+                T[j] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int i, n;
+    Point *T;
+
+    printf("Donner le nombre de points : ");
+    scanf("%d", &n);
+
+    T = malloc(n * sizeof(Point));
+
+    if (T == NULL) {
+        printf("Erreur mémoire\n");
+        return 1;
+    }
+
+    for (i = 0; i < n; i++) {
+        T[i] = SaisirPoint();
+    }
+
+    printf("Avant le tri :\n");
+    for (i = 0; i < n; i++) {
+        AfficherPoint(T[i]);
+    }
+
+    TrierPoints(T, n);
+
+    printf("Après le tri :\n");
+    for (i = 0; i < n; i++) {
+        AfficherPoint(T[i]);
+    }
+
+    free(T);
+
+    return 0;
+}
+
